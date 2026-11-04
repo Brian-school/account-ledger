@@ -44,18 +44,38 @@ public class Main {
             return;
         }
 
-        while (true) {
-            switch (mainMenu.menuPromptUser(sc)) {
-                case 1 -> accountTransaction(true);
-                case 2 -> accountTransaction(false);
-                case 3 -> viewLedger();
-                case 4 -> {
-                    println("Goodbye!");
-                    return;
-                }
-                default -> println("ERROR");
-            }
-        }
+        ArrayList<Transaction> transactions = new ArrayList<>();
+       try {
+           int num_transaction = ht.numTransactions();
+           for (int i = 0; i < num_transaction; i++) {
+               transactions.add(ht.getTransaction(i));
+           }
+
+           for (int i = 0; i < transactions.size(); i++) {
+               println(transactions.get(i));
+           }
+       } catch (IOException e) {
+           println("Error reading file! Reason:"+e.getMessage());
+       }
+
+//
+//        while (true) {
+//            try {
+//                switch (mainMenu.menuPromptUser(sc)) {
+//                    case 1 -> accountTransaction(true);
+//                    case 2 -> accountTransaction(false);
+//                    case 3 -> viewLedger();
+//                    case 4 -> {
+//                        println("Goodbye!");
+//                        return;
+//                    }
+//                    default -> println("ERROR");
+//                }
+//            } catch (IOException e) {
+//                println("There was a problem reading the file. Exiting...");
+//                break;
+//            }
+//        }
 
     }
 
@@ -112,11 +132,6 @@ public class Main {
         }
     }
 
-    private void displayMainScreen () {
-        println("Main Menu:");
-        mainMenu.printMenu();
-    }
-
     private void accountTransaction(boolean deposit) {
         String desc = null;
         if (deposit) {
@@ -170,7 +185,7 @@ public class Main {
         }
     }
 
-    private void viewLedger() {
+    private void viewLedger() throws IOException {
         while (true) {
             println("Ledger Options:");
             switch (mainLedgerMenu.menuPromptUser(sc)) {
@@ -185,7 +200,7 @@ public class Main {
         }
     }
 
-    private void displayFullLedger () {
+    private void displayFullLedger () throws IOException {
         while (true) {
             int num_transactions = ht.numTransactions();
             for (int i = 0; i < num_transactions; i++) {
@@ -199,7 +214,7 @@ public class Main {
         }
     }
 
-    private void displayDepositsOrPaymentsLedger (boolean deposit) {
+    private void displayDepositsOrPaymentsLedger (boolean deposit) throws IOException {
         int num_transactions = ht.numTransactions();
         while (true) {
             for (int i = 0; i < num_transactions; i++) {
@@ -223,7 +238,7 @@ public class Main {
         }
     }
 
-    private void ledgerReports() {
+    private void ledgerReports() throws IOException {
         while (true) {
             switch (ledgerReportMenu.menuPromptUser(sc)) {
                 case 1 -> displayMTDLedger();
@@ -238,7 +253,7 @@ public class Main {
         }
     }
 
-    private void displayMTDLedger() {
+    private void displayMTDLedger() throws IOException {
         int num_transactions = ht.numTransactions();
         Month month = LocalDateTime.now().getMonth();
         int year = LocalDateTime.now().getYear();
@@ -265,7 +280,7 @@ public class Main {
     }
 
 
-    private void displayPrevMonLedger () {
+    private void displayPrevMonLedger () throws IOException {
         LocalDateTime last_month = LocalDateTime.now().minusMonths(1);
         int num_transactions = ht.numTransactions();
         while (true) {
@@ -292,7 +307,7 @@ public class Main {
         }
     }
 
-    private void displayYTDLedger() {
+    private void displayYTDLedger() throws IOException {
         LocalDateTime now = LocalDateTime.now();
         int num_transactions = ht.numTransactions();
         while (true) {
@@ -318,7 +333,7 @@ public class Main {
         }
     }
 
-    private void displayPrevYearLedger () {
+    private void displayPrevYearLedger () throws IOException {
         LocalDateTime last_year = LocalDateTime.now().minusYears(1);
         int num_transactions = ht.numTransactions();
         while (true) {
@@ -343,7 +358,7 @@ public class Main {
         }
     }
 
-    private void searchByVendorLedger () {
+    private void searchByVendorLedger () throws IOException {
         int num_transactions = ht.numTransactions();
         while (true) {
             print("What is the name of the vendor you wish to search for?\nChoice -> ");

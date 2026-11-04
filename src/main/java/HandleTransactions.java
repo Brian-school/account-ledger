@@ -1,4 +1,5 @@
 import java.io.*;
+import java.text.Format;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -33,14 +34,52 @@ public class HandleTransactions {
                 t.getAmount());
     }
 
-    public int numTransactions() {
-
-        return 0;
+    public int numTransactions() throws IOException {
+        int counter = 0;
+        while (read_and_write.readLine() != null) {
+            counter ++;
+        }
+        return counter;
     }
 
-    public Transaction getTransaction(int index) {
 
-        return new Transaction();
+    public Transaction getTransaction(int index) throws IndexOutOfBoundsException, InternalError, IOException {
+        int num_transactions = this.numTransactions();
+        Transaction t = null;
+
+        if (index > num_transactions) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        String transaction = null;
+        try {
+            // move to start of file
+            read_and_write.seek(0);
+
+            // read lines from the file (each line contains one transaction) until you reach the desired transaction
+            for (int i = 0; i < num_transactions; i++) {
+                transaction = read_and_write.readLine();
+
+                if (i == index) {
+
+                    String [] fields = transaction.split("\\|");
+                    if (fields.length != 5) {
+                        throw new InternalError();
+                    }
+
+                    LocalDateTime transaction_time = LocalDateTime.parse(fields[0] + Transaction.separator + fields[1],
+                            DateTimeFormatter.ofPattern("hh:mm:ss"+Transaction.separator+"yyyy-MM-dd"));
+
+                    t = new Transaction(transaction_time, fields[2], fields[3], Double.parseDouble(fields[4]));
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            //  for when the file reader has trouble
+            throw new RuntimeException(e);
+        }
+
+        return t;
     }
 
     public void newTransaction(double difference, String vendor, String description) throws IOException {

@@ -7,6 +7,8 @@ public class Transaction {
     private String vendor;
     private double amount;
 
+    public static final String separator = "|";
+
     public Transaction(LocalDateTime when_transacted, String description, String vendor, double amount) {
         this.when_transacted = when_transacted;
         this.description = description;
@@ -27,7 +29,7 @@ public class Transaction {
         DateTimeFormatter YMD_format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String HMS = when_transacted.format(HMS_format);
         String YMD = when_transacted.format(YMD_format);
-        return String.format("%s|%s|%30s|%30s|%.2f\n",
+        return String.format("%s"+separator+"%s"+separator+"%30s"+separator+"%30s"+separator+"%.2f\n",
                 HMS,
                 YMD,
                 this.description,
