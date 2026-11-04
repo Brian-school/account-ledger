@@ -36,6 +36,7 @@ public class HandleTransactions {
 
     public int numTransactions() throws IOException {
         int counter = 0;
+        read_and_write.seek(0);
         while (read_and_write.readLine() != null) {
             counter ++;
         }
@@ -48,7 +49,7 @@ public class HandleTransactions {
         Transaction t = null;
 
         if (index > num_transactions) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException("Index "+index+" is out of bounds. This instance has "+num_transactions+" transactions.");
         }
 
         String transaction = null;
@@ -66,10 +67,20 @@ public class HandleTransactions {
                     if (fields.length != 5) {
                         throw new InternalError();
                     }
+                    // 10:57:27|2026-11-03
+                    String [] time = fields[0].split(":");
+                    if (time.length != 3) {
+                        throw new InternalError();
+                    }
+                    String [] date = fields[1].split("-");
+                    if (date.length != 3) {
+                        throw new InternalError();
+                    }
 
-                    LocalDateTime transaction_time = LocalDateTime.parse(fields[0] + Transaction.separator + fields[1],
-                            DateTimeFormatter.ofPattern("hh:mm:ss"+Transaction.separator+"yyyy-MM-dd"));
-
+                    int [] HMS = {Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2])};
+                    int [] YMD = {Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2])};
+                    LocalDateTime transaction_time = LocalDateTime.of(YMD[0], YMD[1], YMD[2],
+                                                                      HMS[0], HMS[1], HMS[2]);
                     t = new Transaction(transaction_time, fields[2], fields[3], Double.parseDouble(fields[4]));
                     break;
                 }

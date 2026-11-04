@@ -45,18 +45,19 @@ public class Main {
         }
 
         ArrayList<Transaction> transactions = new ArrayList<>();
-       try {
-           int num_transaction = ht.numTransactions();
-           for (int i = 0; i < num_transaction; i++) {
-               transactions.add(ht.getTransaction(i));
-           }
+        try {
+            int num_transaction = ht.numTransactions();
+            for (int i = 0; i < num_transaction; i++) {
+                transactions.add(ht.getTransaction(i));
+            }
+        } catch (IOException e) {
+            println("Error reading file! Reason:"+e.getMessage());
+        }
 
-           for (int i = 0; i < transactions.size(); i++) {
-               println(transactions.get(i));
-           }
-       } catch (IOException e) {
-           println("Error reading file! Reason:"+e.getMessage());
-       }
+        for (int i = 0; i < transactions.size(); i++) {
+            println(transactions.get(i));
+        }
+
 
 //
 //        while (true) {
