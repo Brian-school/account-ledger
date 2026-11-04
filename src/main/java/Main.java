@@ -24,7 +24,7 @@ public class Main {
     private final String go_back_one = "Return One Screen";
     // menu strings
     private final String [] mainMenuOptions = {"Add Deposit", "Make Payment", "View Ledger", "EXIT Application"};
-    private final String [] ledgerMainMenuOptions = {"All", "Deposits", "Payments", "Reports", go_back_one};
+    private final String [] ledgerMainMenuOptions = {"All", "Deposits", "Payments", "Reports", "Custom Search", go_back_one};
     private final String [] ledgerReportsMenOptions = {"Month to Date", "Previous Month", "Year to Date", "Previous Year", "Search by Vendor", go_back_one};
 
     // menu option objects
@@ -178,11 +178,16 @@ public class Main {
                 case 2 -> displayDepositsOrPaymentsLedger(true);
                 case 3 -> displayDepositsOrPaymentsLedger(false);
                 case 4 -> ledgerReports();
-                case 5 -> {
+                case 5 -> customSearch();
+                case 6 -> {
                     return;
                 }
             }
         }
+    }
+
+    private void customSearch() {
+
     }
 
     private void displayFullLedger () throws IOException {
