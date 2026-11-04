@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -186,8 +187,136 @@ public class Main {
         }
     }
 
-    private void customSearch() {
+    private int promptNumberInRange(String member, String of_set, int min, int max) {
+        int retval;
+        while (true) {
+            print("Choose a "+member+" of the "+of_set+".\n"+member+" -> ");
+            try {
+                retval = Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException e) {
+                println("Sorry, I didn't understand that.");
+                continue;
+            }
 
+            if (retval < min || retval > max) {
+                println("Invalid "+member+". Should be a number between "+min+" and "+max+", inclusive.");
+            } else {
+                break;
+            }
+        }
+        return retval;
+    }
+
+    private LocalDate promptDate() {
+
+        int day = promptNumberInRange("Day", "Month", 1, 31);
+
+        int month = promptNumberInRange("Month", "Year", 1, 12);
+
+        int year = promptNumberInRange("Year", "last decade",
+                LocalDate.now().minusYears(10L).getYear(),
+                LocalDate.now().getYear());
+
+        return LocalDate.of(year, month, day);
+    }
+
+    private boolean isWithinAPenny(double val1, double val2) {
+        // floating point comparisons are really tricky. this is to make sure things within a penny's worth will match,
+        // since floating point representation of small numbers can be inexact.
+        double difference1 = val1 - val2;
+        double difference2 = val2 - val1;
+
+        return (difference1 > 0.0 && difference1 <= 0.01) || (difference2 > 0.0 && difference2 <= 0.01);
+    }
+
+    private void customSearch() {
+        LocalDate start_date;
+        LocalDate end_date;
+        String description;
+        String vendor;
+        double amount;
+        while (true) {
+            start_date = null;
+            end_date = null;
+            description = "";
+            vendor = "";
+            amount = 0.0;
+            println("Search by Start/End date?");
+            if (Truthiness.toBool(yesNo.menuPromptUser(sc))) {
+                println("Input the start date you would like to search from.");
+                start_date = promptDate();
+                println("Input the end date you would like to search from.");
+                end_date = promptDate();
+
+                if (start_date.isAfter(end_date)) {
+                    println("The start date must occur before the end date. Try again?");
+                    if (Truthiness.toBool(yesNo.menuPromptUser(sc))) {
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            println("Search by description?");
+            if (Truthiness.toBool(yesNo.menuPromptUser(sc))) {
+                print("Input the description to search by.\nDescription -> ");
+                description = sc.nextLine().trim();
+            }
+
+            println("Search by vendor?");
+            if (Truthiness.toBool(yesNo.menuPromptUser(sc))) {
+                print("Input the vendor to search by.\nVendor -> ");
+                vendor = sc.nextLine().trim();
+            }
+
+            println("Search by amount?");
+            if (Truthiness.toBool(yesNo.menuPromptUser(sc))) {
+                print("Input the amount to search by.\nAmount -> ");
+                amount = Double.parseDouble(sc.nextLine().trim());
+            }
+
+            try {
+                int num_transactions = ht.numTransactions();
+                for (int i = 0; i < ; i++) {
+                    Transaction t = ht.getTransaction(i);
+                    boolean filtered_match = false;
+
+                    if (start_date != null) {
+                        if (t.getWhen_transacted().isAfter(start_date.atStartOfDay()) &&
+                            t.getWhen_transacted().isBefore(end_date.atStartOfDay())) {
+                            filtered_match = true
+                        }
+                    }
+
+                    if (!description.isEmpty()) {
+                        if (t.getDescription().equalsIgnoreCase(description)) {
+                            filtered_match = true;
+                        }
+                    }
+
+                    if (!vendor.isEmpty()) {
+                        if (t.getVendor().equalsIgnoreCase(vendor)) {
+                            filtered_match = true;
+                        }
+                    }
+
+                    if (amount != 0.0) {
+                        if (isWithinAPenny(t.getAmount(), amount)) {
+                            // see implementation of the comparison function above to view rationale
+                            filtered_match = true;
+                        }
+                    }
+
+                    if (filtered_match) {
+                        println(t);
+                    }
+                }
+            } catch (IOException e) {
+                println("Error occurred reading file!");
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private void displayFullLedger () throws IOException {
