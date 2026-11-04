@@ -21,7 +21,7 @@ public class Main {
     private Scanner sc;
     private HandleTransactions ht;
 
-    final String go_back_one = "Return One Screen";
+    private final String go_back_one = "Return One Screen";
     // menu strings
     private final String [] mainMenuOptions = {"Add Deposit", "Make Payment", "View Ledger", "EXIT Application"};
     private final String [] ledgerMainMenuOptions = {"All", "Deposits", "Payments", "Reports", go_back_one};
@@ -44,39 +44,23 @@ public class Main {
             return;
         }
 
-        ArrayList<Transaction> transactions = new ArrayList<>();
-        try {
-            int num_transaction = ht.numTransactions();
-            for (int i = 0; i < num_transaction; i++) {
-                transactions.add(ht.getTransaction(i));
+        while (true) {
+            try {
+                switch (mainMenu.menuPromptUser(sc)) {
+                    case 1 -> accountTransaction(true);
+                    case 2 -> accountTransaction(false);
+                    case 3 -> viewLedger();
+                    case 4 -> {
+                        println("Goodbye!");
+                        return;
+                    }
+                    default -> println("ERROR");
+                }
+            } catch (IOException e) {
+                println("There was a problem reading the file. Exiting...");
+                break;
             }
-        } catch (IOException e) {
-            println("Error reading file! Reason:"+e.getMessage());
         }
-
-        for (int i = 0; i < transactions.size(); i++) {
-            println(transactions.get(i));
-        }
-
-
-//
-//        while (true) {
-//            try {
-//                switch (mainMenu.menuPromptUser(sc)) {
-//                    case 1 -> accountTransaction(true);
-//                    case 2 -> accountTransaction(false);
-//                    case 3 -> viewLedger();
-//                    case 4 -> {
-//                        println("Goodbye!");
-//                        return;
-//                    }
-//                    default -> println("ERROR");
-//                }
-//            } catch (IOException e) {
-//                println("There was a problem reading the file. Exiting...");
-//                break;
-//            }
-//        }
 
     }
 

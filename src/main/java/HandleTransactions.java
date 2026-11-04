@@ -44,6 +44,7 @@ public class HandleTransactions {
     }
 
 
+
     public Transaction getTransaction(int index) throws IndexOutOfBoundsException, InternalError, IOException {
         int num_transactions = this.numTransactions();
         Transaction t = null;
