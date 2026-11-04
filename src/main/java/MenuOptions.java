@@ -31,7 +31,13 @@ public class MenuOptions {
             printMenu();
             if (!yes_or_no) {
                 print("Choice -> ");
-                final int choice = Integer.parseInt(sc.nextLine().trim());
+                int choice = 0;
+                try {
+                    choice = Integer.parseInt(sc.nextLine().trim());
+                } catch (NumberFormatException e) {
+                    println("Sorry, I didn't recognize that.");
+                    continue;
+                }
                 if (choice < 0 || choice > options.length) {
                     if (options.length == 1) {
                         println("Option for selection is 1. Please select 1.");

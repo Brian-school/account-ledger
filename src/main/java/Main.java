@@ -243,12 +243,18 @@ public class Main {
         Month month = LocalDateTime.now().getMonth();
         int year = LocalDateTime.now().getYear();
         while (true) {
+            boolean result_found = false;
             for (int i = 0; i < num_transactions; i++) {
                 Transaction t = ht.getTransaction(i);
 
                 if (t.getWhen_transacted().getYear() == year && t.getWhen_transacted().getMonth().equals(month)) {
                     println(t);
+                    result_found = true;
                 }
+            }
+
+            if (!result_found) {
+                println("Search yielded no results.");
             }
 
             println("Display this menu again?");
@@ -263,13 +269,20 @@ public class Main {
         LocalDateTime last_month = LocalDateTime.now().minusMonths(1);
         int num_transactions = ht.numTransactions();
         while (true) {
+            boolean result_found = false;
+
             for (int i = 0; i < num_transactions; i++) {
                 Transaction t = ht.getTransaction(i);
 
                 if(t.getWhen_transacted().getMonth().equals(last_month.getMonth()) &&
                         t.getWhen_transacted().getYear() == last_month.getYear()) {
                     println(t);
+                    result_found = true;
                 }
+            }
+
+            if (!result_found) {
+                println("Search yielded no results.");
             }
 
             println("Display this menu again?");
@@ -283,12 +296,19 @@ public class Main {
         LocalDateTime now = LocalDateTime.now();
         int num_transactions = ht.numTransactions();
         while (true) {
+            boolean result_found = false;
+
             for (int i = 0; i < num_transactions; i++) {
                 Transaction t = ht.getTransaction(i);
 
                 if (t.getWhen_transacted().getYear() == now.getYear()) {
                     println(t);
+                    result_found = true;
                 }
+            }
+
+            if (!result_found) {
+                println("Search yielded no results.");
             }
 
             println("Display this menu again?");
@@ -302,12 +322,18 @@ public class Main {
         LocalDateTime last_year = LocalDateTime.now().minusYears(1);
         int num_transactions = ht.numTransactions();
         while (true) {
+            boolean result_found = false;
             for (int i = 0; i < num_transactions; i++) {
                 Transaction t = ht.getTransaction(i);
 
                 if (t.getWhen_transacted().getYear() == last_year.getYear()) {
                     println(t);
+                    result_found = true;
                 }
+            }
+
+            if (!result_found) {
+                println("Search yielded no results.");
             }
 
             println("Display this menu again?");
@@ -322,12 +348,18 @@ public class Main {
         while (true) {
             print("What is the name of the vendor you wish to search for?\nChoice -> ");
             String vendor = sc.nextLine().trim();
+            boolean result_found = false;
             for (int i = 0; i < num_transactions; i++) {
                 Transaction t = ht.getTransaction(i);
 
                 if (t.getVendor().equalsIgnoreCase(vendor)) {
                     println(t);
+                    result_found = true;
                 }
+            }
+
+            if (!result_found) {
+                println("Search yielded no results.");
             }
 
             println("Search again?");
@@ -336,4 +368,6 @@ public class Main {
             }
         }
     }
+
+
 }
