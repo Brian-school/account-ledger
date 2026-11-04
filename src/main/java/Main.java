@@ -276,16 +276,24 @@ public class Main {
                 amount = Double.parseDouble(sc.nextLine().trim());
             }
 
+            if (start_date == null && description.isEmpty() && vendor.isEmpty() && amount == 0.0) {
+                println("You didn't choose anything to search by!\nTry again?");
+                if (!Truthiness.toBool(yesNo.menuPromptUser(sc))) {
+                    break;
+                }
+            }
+
+            println("Matching records:");
             try {
                 int num_transactions = ht.numTransactions();
-                for (int i = 0; i < ; i++) {
+                for (int i = 0; i < num_transactions; i++) {
                     Transaction t = ht.getTransaction(i);
                     boolean filtered_match = false;
 
                     if (start_date != null) {
                         if (t.getWhen_transacted().isAfter(start_date.atStartOfDay()) &&
                             t.getWhen_transacted().isBefore(end_date.atStartOfDay())) {
-                            filtered_match = true
+                            filtered_match = true;
                         }
                     }
 
@@ -311,6 +319,12 @@ public class Main {
                     if (filtered_match) {
                         println(t);
                     }
+                }
+
+                println("Search again?");
+
+                if (!Truthiness.toBool(yesNo.menuPromptUser(sc))) {
+                    break;
                 }
             } catch (IOException e) {
                 println("Error occurred reading file!");
