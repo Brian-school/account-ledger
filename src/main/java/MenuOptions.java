@@ -26,8 +26,21 @@ public class MenuOptions {
         }
     }
 
+    /**
+     * Credit for the following method goes to stackoverflow.
+     *
+     * <a href="https://stackoverflow.com/questions/2979383/how-to-clear-the-console-using-java">How to clear the screen</a>
+     */
+    public static void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
     public int menuPromptUser(Scanner sc) {
         while (true) {
+            if (!yes_or_no) {
+                clearScreen();
+            }
             printMenu();
             if (!yes_or_no) {
                 print("Choice -> ");

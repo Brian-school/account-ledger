@@ -241,6 +241,7 @@ public class Main {
             description = "";
             vendor = "";
             amount = 0.0;
+            MenuOptions.clearScreen();
             println("Search by Start/End date?");
             if (Truthiness.toBool(yesNo.menuPromptUser(sc))) {
                 println("Input the start date you would like to search from.");
@@ -284,6 +285,7 @@ public class Main {
             }
 
             println("Matching records:");
+
             try {
                 int num_transactions = ht.numTransactions();
                 for (int i = 0; i < num_transactions; i++) {
