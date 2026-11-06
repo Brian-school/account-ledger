@@ -35,7 +35,7 @@ public class Main {
 
     private MenuOptions yesNo;
     void main() {
-
+        MenuOptions.clearScreen();
         initialize();
 
         try {
@@ -55,7 +55,6 @@ public class Main {
                         println("Goodbye!");
                         return;
                     }
-                    default -> println("ERROR");
                 }
             } catch (IOException e) {
                 println("There was a problem reading the file. Exiting...");
@@ -134,18 +133,13 @@ public class Main {
                 continue;
             }
 
-            if (amount < 0.0 && deposit) {
-                println("You cannot make a negative deposit. Try again.");
-                continue;
-            } else if (amount > 0.0 && !deposit) {
-                println("Payments must be submitted as a negative value. Try again");
-                continue;
-            } else if (amount == 0.0) {
-                println("You cannot transact no money. Try again.");
+            if (amount <= 0.0) {
+                println("Please enter a positive, nonzero value.");
                 continue;
             }
 
             if (!deposit) {
+                amount *= -1;
                 print("What are you paying for?\nDescription -> ");
                 desc = sc.nextLine().trim();
             }
@@ -295,6 +289,8 @@ public class Main {
                 println("You didn't choose anything to search by!\nTry again?");
                 if (!Truthiness.toBool(yesNo.menuPromptUser(sc))) {
                     break;
+                } else {
+                    continue;
                 }
             }
 
@@ -316,12 +312,17 @@ public class Main {
                     if (!description.isEmpty()) {
                         if (t.getDescription().equalsIgnoreCase(description)) {
                             filtered_match = true;
+                        } else if (filtered_match) {
+                            // not a match, must match in every category searching for
+                            continue;
                         }
                     }
 
                     if (!vendor.isEmpty()) {
                         if (t.getVendor().equalsIgnoreCase(vendor)) {
                             filtered_match = true;
+                        } else if (filtered_match) {
+                            continue;
                         }
                     }
 
@@ -329,6 +330,8 @@ public class Main {
                         if (isWithinAPenny(t.getAmount(), amount)) {
                             // see implementation of the comparison function above to view rationale
                             filtered_match = true;
+                        } else if (filtered_match) {
+                            continue;
                         }
                     }
 
