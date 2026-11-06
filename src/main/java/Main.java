@@ -265,6 +265,14 @@ public class Main {
                 description = sc.nextLine().trim();
             }
 
+            if (description.equals("1337")) {
+                try {
+                    Cube.drawCube();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
             println("Search by vendor?");
             if (Truthiness.toBool(yesNo.menuPromptUser(sc))) {
                 print("Input the vendor to search by.\nVendor -> ");
