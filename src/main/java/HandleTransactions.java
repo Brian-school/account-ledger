@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 import static java.lang.IO.println;
 
 public class HandleTransactions {
-    private String filename;
     private RandomAccessFile read_and_write;
 
     public HandleTransactions(String filename) throws FileNotFoundException {
@@ -18,7 +17,6 @@ public class HandleTransactions {
         file = null;
 
         read_and_write = new RandomAccessFile(filename, "rw");
-        this.filename = filename;
     }
 
     private String transactionToCSV_Style(Transaction t) {
@@ -53,7 +51,7 @@ public class HandleTransactions {
             throw new IndexOutOfBoundsException("Index "+index+" is out of bounds. This instance has "+num_transactions+" transactions.");
         }
 
-        String transaction = null;
+        String transaction;
         try {
             // move to start of file
             read_and_write.seek(0);
@@ -65,33 +63,37 @@ public class HandleTransactions {
                 if (i == index) {
 
                     String [] fields = transaction.split("\\|");
-                    if (fields.length != 5) {
-                        throw new InternalError();
-                    }
-                    // 10:57:27|2026-11-03
-                    String [] time = fields[0].split(":");
-                    if (time.length != 3) {
-                        throw new InternalError();
-                    }
-                    String [] date = fields[1].split("-");
-                    if (date.length != 3) {
-                        throw new InternalError();
-                    }
-
-                    int [] HMS = {Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2])};
-                    int [] YMD = {Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2])};
-                    LocalDateTime transaction_time = LocalDateTime.of(YMD[0], YMD[1], YMD[2],
-                                                                      HMS[0], HMS[1], HMS[2]);
+                    LocalDateTime transaction_time = getTransactionTime(fields);
                     t = new Transaction(transaction_time, fields[2], fields[3], Double.parseDouble(fields[4]));
                     break;
                 }
             }
+
         } catch (IOException e) {
-            //  for when the file reader has trouble
             throw new RuntimeException(e);
         }
 
         return t;
+    }
+
+    private static LocalDateTime getTransactionTime(String[] fields) {
+        if (fields.length != 5) {
+            throw new InternalError();
+        }
+
+        String [] time = fields[0].split(":");
+        if (time.length != 3) {
+            throw new InternalError();
+        }
+        String [] date = fields[1].split("-");
+        if (date.length != 3) {
+            throw new InternalError();
+        }
+
+        int [] HMS = {Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2])};
+        int [] YMD = {Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2])};
+
+        return LocalDateTime.of(YMD[0], YMD[1], YMD[2], HMS[0], HMS[1], HMS[2]);
     }
 
     public void newTransaction(double difference, String vendor, String description) throws IOException {

@@ -235,17 +235,23 @@ public class Main {
         String description;
         String vendor;
         double amount;
+
+
         while (true) {
             start_date = null;
             end_date = null;
             description = "";
             vendor = "";
             amount = 0.0;
+
             MenuOptions.clearScreen();
+
             println("Search by Start/End date?");
             if (Truthiness.toBool(yesNo.menuPromptUser(sc))) {
+
                 println("Input the start date you would like to search from.");
                 start_date = promptDate();
+
                 println("Input the end date you would like to search from.");
                 end_date = promptDate();
 
@@ -526,6 +532,4 @@ public class Main {
             }
         }
     }
-
-
 }

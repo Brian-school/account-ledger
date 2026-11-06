@@ -3,7 +3,10 @@ import java.util.Queue;
 
 import static java.lang.Thread.sleep;
 
-
+/**
+ * credit to
+ * @link <a href="https://github.com/DaneIwema/Spinning-ASCII-Cube">Spinning cube github</a>
+ */
 public class Cube {
 
     private static int r = 7;
@@ -79,7 +82,7 @@ public class Cube {
                 v[0] * Math.cos(B) * Math.sin(C));
     }
 
-    /* TODO drawFace method */
+
     private static void drawFace(int[] face, char color) {
 
         /* Draws from vec0 to vec1 and vec2 to vec3 */
