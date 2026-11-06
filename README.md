@@ -13,7 +13,8 @@ and will allow you to search for it by its individual fields, i.e.
 - search by what happened this month
 - search in a given time period
 - search by transaction amount
-- and more!
+As well as
+- add new transactions, payments, deposits, etc
 ### how do I run it?
 you will need:
 - jdk version 27 or later
